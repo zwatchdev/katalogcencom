@@ -675,8 +675,8 @@ body {
 
 .export-page-number {
   position: absolute;
-  top: 2.2mm;
-  right: 4mm;
+  bottom: 7mm;
+  right: 8mm;
   font-size: 3.2mm;
   font-weight: 700;
   color: rgba(17, 17, 17, 0.6);
