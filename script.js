@@ -1735,9 +1735,6 @@ function renderProducts(items) {
                 </div>
                 <div class="card-top-copy">
                   <h3 class="store-name">Central Computer Singkawang</h3>
-                  <span class="stock-badge ${product.stock > 0 ? "" : "out-of-stock"}">
-                    ${product.stock > 0 ? `Stok ${product.stock}` : "Stok Habis"}
-                  </span>
                 </div>
               </div>
 
