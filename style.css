@@ -924,8 +924,8 @@ body {
   position: absolute;
   left: 5mm;
   right: 5mm;
-  bottom: 3mm;
-  height: 2.2mm;
+  bottom: 4.1mm;
+  height: 2.8mm;
   border-radius: 999px;
   background: linear-gradient(90deg, #ca1111 0%, #ef4444 100%);
 }
