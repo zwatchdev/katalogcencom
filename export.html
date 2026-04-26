@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Export PDF Central Computer Singkawang</title>
+  <meta
+    name="description"
+    content="Halaman export dan print PDF katalog produk Central Computer Singkawang dengan layout A4."
+  >
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Oswald:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-page export-page-body">
+  <main class="container py-4">
+    <section id="exportGuard" class="dashboard-auth d-none">
+      <article class="dashboard-card dashboard-auth-card">
+        <span class="section-kicker">Admin Area</span>
+        <h1 class="section-title">Akses Export PDF</h1>
+        <p class="dashboard-text">
+          Halaman export hanya bisa dibuka setelah login dari dashboard admin.
+        </p>
+        <div class="form-actions">
+          <a class="btn btn-danger" href="dashboard.html">Ke Dashboard</a>
+          <a class="btn btn-outline-dark" href="index.html">Kembali ke Katalog</a>
+        </div>
+      </article>
+    </section>
+
+    <section id="exportWorkspace" class="d-none">
+      <div class="section-head export-toolbar">
+        <div>
+          <span class="section-kicker">Export PDF</span>
+          <h1 class="section-title">Preview A4 Katalog</h1>
+          <p class="dashboard-text mb-0">
+            Pilih produk dari dashboard admin, atur header, lalu print ke PDF.
+          </p>
+        </div>
+        <div class="section-actions">
+          <a class="btn btn-outline-dark btn-lg" href="dashboard.html">Kembali ke Dashboard</a>
+          <button class="btn btn-outline-dark btn-lg" id="resetExportOrderButton" type="button">Reset Posisi</button>
+          <button class="btn btn-danger btn-lg" id="printPdfButton" type="button">Print PDF</button>
+        </div>
+      </div>
+
+      <div class="export-layout export-toolbar">
+        <article class="dashboard-card export-settings-card">
+          <h2 class="dashboard-title">Pengaturan Export</h2>
+          <form id="exportSettingsForm" class="dashboard-form">
+            <div class="form-field">
+              <label for="exportPageSelect" class="form-label">Atur Gambar Untuk Halaman</label>
+              <select id="exportPageSelect" class="form-select"></select>
+            </div>
+
+            <div class="form-field">
+              <label for="exportBrochureDate" class="form-label">Tanggal Brosur</label>
+              <input type="date" id="exportBrochureDate" class="form-control">
+            </div>
+
+            <div class="form-field">
+              <label for="exportLogoInput" class="form-label">Logo Custom</label>
+              <input
+                type="file"
+                id="exportLogoInput"
+                class="form-control"
+                accept="image/png,image/jpeg"
+                data-export-logo-input="true"
+              >
+              <button class="btn btn-outline-dark" type="button" id="clearExportLogoButton">Kosongkan Logo</button>
+            </div>
+
+            <div class="form-field">
+              <label for="exportStoreName" class="form-label">Nama Toko</label>
+              <input type="text" id="exportStoreName" class="form-control">
+            </div>
+
+            <div class="form-field">
+              <label for="exportAddressLine1" class="form-label">Alamat Baris 1</label>
+              <input type="text" id="exportAddressLine1" class="form-control">
+            </div>
+
+            <div class="form-field">
+              <label for="exportAddressLine2" class="form-label">Alamat Baris 2</label>
+              <input type="text" id="exportAddressLine2" class="form-control">
+            </div>
+
+            <div class="form-field">
+              <label for="exportPhone" class="form-label">Telepon</label>
+              <input type="text" id="exportPhone" class="form-control">
+            </div>
+
+            <div class="form-field">
+              <label for="exportNote" class="form-label">Catatan Header</label>
+              <input type="text" id="exportNote" class="form-control" placeholder="Opsional">
+            </div>
+
+            <div class="export-image-grid">
+              <article class="export-image-card">
+                <h3 class="export-image-title" id="exportImageTitle1">Gambar Custom 1</h3>
+                <input
+                  type="file"
+                  class="form-control"
+                  accept="image/png,image/jpeg"
+                  data-custom-image-input="0"
+                >
+                <button class="btn btn-outline-dark" type="button" data-clear-image="0">Kosongkan</button>
+              </article>
+
+              <article class="export-image-card">
+                <h3 class="export-image-title" id="exportImageTitle2">Gambar Custom 2</h3>
+                <input
+                  type="file"
+                  class="form-control"
+                  accept="image/png,image/jpeg"
+                  data-custom-image-input="1"
+                >
+                <button class="btn btn-outline-dark" type="button" data-clear-image="1">Kosongkan</button>
+              </article>
+
+              <article class="export-image-card">
+                <h3 class="export-image-title" id="exportImageTitle3">Gambar Custom 3</h3>
+                <input
+                  type="file"
+                  class="form-control"
+                  accept="image/png,image/jpeg"
+                  data-custom-image-input="2"
+                >
+                <button class="btn btn-outline-dark" type="button" data-clear-image="2">Kosongkan</button>
+              </article>
+            </div>
+          </form>
+        </article>
+      </div>
+
+      <article class="dashboard-card export-summary-card export-toolbar">
+        <h2 class="dashboard-title">Ringkasan Produk Terpilih</h2>
+        <p class="dashboard-text" id="exportSelectionSummary">0 produk dipilih.</p>
+        <div id="exportSelectedBrands" class="export-brand-list"></div>
+      </article>
+
+      <section id="exportPreview" class="export-preview"></section>
+      <div id="exportPreviewPagination" class="pagination-wrap export-preview-pagination"></div>
+    </section>
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

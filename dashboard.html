@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Central Computer Singkawang</title>
+  <meta
+    name="description"
+    content="Dashboard admin untuk mengelola katalog produk Central Computer Singkawang."
+  >
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Oswald:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-page">
+  <main class="container py-5">
+    <section class="dashboard-auth" id="loginSection">
+      <article class="dashboard-card dashboard-auth-card">
+        <span class="section-kicker">Admin Area</span>
+        <h1 class="section-title">Login Dashboard</h1>
+        <p class="dashboard-text">
+          Masuk untuk mengelola produk katalog Central Computer Singkawang.
+        </p>
+
+        <form id="loginForm" class="dashboard-form">
+          <div class="form-field">
+            <label for="loginUsername" class="form-label">Username</label>
+            <input type="text" id="loginUsername" class="form-control" autocomplete="username" required>
+          </div>
+
+          <div class="form-field">
+            <label for="loginPassword" class="form-label">Password</label>
+            <input type="password" id="loginPassword" class="form-control" autocomplete="current-password" required>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-danger" type="submit">Masuk</button>
+            <a class="btn btn-outline-dark" href="index.html">Kembali ke Katalog</a>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <section class="dashboard-shell d-none" id="dashboardSection">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Dashboard</span>
+          <h2 class="section-title">CRUD Produk</h2>
+        </div>
+        <div class="section-actions">
+          <a class="btn btn-outline-dark btn-lg" href="index.html">Lihat Katalog</a>
+          <a class="btn btn-danger btn-lg" href="export.html">Export PDF</a>
+          <a class="btn btn-outline-danger btn-lg" href="export-kredit.html">Export Kredit</a>
+          <button class="btn btn-outline-danger btn-lg" id="logoutButton" type="button">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <div class="dashboard-stack">
+        <article class="dashboard-card">
+          <h3 class="dashboard-title">Form Produk</h3>
+          <p class="dashboard-text">
+            Tambahkan atau edit produk supaya card katalog otomatis mengikuti format yang sama.
+          </p>
+
+          <form id="productForm" class="dashboard-form">
+            <input type="hidden" id="productId">
+            <input type="hidden" id="productPriceMode" value="Cash">
+
+            <div class="form-field">
+              <label for="productName" class="form-label">Nama Produk</label>
+              <input type="text" id="productName" class="form-control" required>
+            </div>
+
+            <div class="form-field">
+              <label for="productPrice" class="form-label">Harga</label>
+              <input type="number" id="productPrice" class="form-control" min="0" required>
+            </div>
+
+            <div class="form-field">
+              <label for="productStock" class="form-label">Stok</label>
+              <input type="number" id="productStock" class="form-control" min="0" required>
+            </div>
+
+            <div class="form-field">
+              <label for="productType" class="form-label">Jenis Produk</label>
+              <select id="productType" class="form-select" required>
+                <option value="Laptop" selected>Laptop</option>
+                <option value="Printer">Printer</option>
+                <option value="Monitor">Monitor</option>
+                <option value="Komputer">Komputer</option>
+                <option value="Proyektor">Proyektor</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="productCategory" class="form-label">Kategori</label>
+              <select id="productCategory" class="form-select" required>
+                <option value="Gaming">Gaming</option>
+                <option value="Office" selected>Office</option>
+                <option value="Kuliahan">Kuliahan</option>
+              </select>
+              <div class="product-category-quick-actions" aria-label="Aksi cepat kategori">
+                <button class="btn btn-outline-dark" type="button" data-product-category-quick="cash">Mode Cash</button>
+                <button class="btn btn-outline-danger" type="button" data-product-category-quick="credit">Mode Kredit</button>
+              </div>
+            </div>
+
+            <div class="form-field d-none" id="productImageField">
+              <label for="productImageInput" class="form-label">Gambar Produk</label>
+              <input
+                type="file"
+                id="productImageInput"
+                class="form-control"
+                accept="image/png,image/jpeg,image/webp"
+              >
+              <p class="dashboard-text mb-2">Maksimal ukuran file 2MB. Format PNG, JPG, atau WEBP.</p>
+              <div id="productImagePreview" class="product-image-preview d-none"></div>
+              <button class="btn btn-outline-dark" type="button" id="clearProductImageButton">Kosongkan Gambar</button>
+            </div>
+
+            <div id="specEditorSection">
+              <div class="spec-editor-head">
+                <h4 class="spec-editor-title">Spesifikasi</h4>
+                <button class="btn btn-outline-danger" id="addSpecButton" type="button">
+                  Tambah Spesifikasi
+                </button>
+              </div>
+
+              <div id="specFields" class="spec-fields"></div>
+            </div>
+
+            <div class="form-field d-none" id="descriptionField">
+              <label for="productDescription" class="form-label">Deskripsi</label>
+              <textarea
+                id="productDescription"
+                class="form-control"
+                rows="6"
+                placeholder="Masukkan deskripsi produk"
+              ></textarea>
+            </div>
+
+            <div class="form-field d-none" id="featureField">
+              <label for="productFeature" class="form-label">Fitur</label>
+              <textarea
+                id="productFeature"
+                class="form-control"
+                rows="3"
+                placeholder="Masukkan fitur utama produk"
+              ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-danger" type="submit" id="saveProductButton">Simpan Produk</button>
+              <button class="btn btn-outline-dark" type="button" id="cancelEditButton">Batal Edit</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="dashboard-card">
+          <h3 class="dashboard-title">Banner Katalog</h3>
+          <p class="dashboard-text">
+            Upload banner custom untuk tampil di bagian paling atas katalog publik. Jika banner dikosongkan, section banner tidak akan muncul.
+          </p>
+
+          <div class="dashboard-form">
+            <div class="form-field">
+              <label for="siteBannerInput" class="form-label">Upload Banner</label>
+              <input
+                type="file"
+                id="siteBannerInput"
+                class="form-control"
+                accept="image/png,image/jpeg,image/webp"
+              >
+              <p class="dashboard-text mb-0">Format PNG, JPG/JPEG, atau WEBP. Maksimal ukuran file 5MB.</p>
+            </div>
+
+            <div id="siteBannerPreview" class="product-image-preview d-none"></div>
+
+            <div class="form-actions">
+              <button class="btn btn-outline-dark" type="button" id="clearSiteBannerButton">Kosongkan Banner</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="dashboard-card">
+          <div class="dashboard-list-head">
+            <div>
+              <h3 class="dashboard-title">Data Produk Cash</h3>
+              <p class="dashboard-text mb-0">Kelola produk katalog reguler dari daftar ini.</p>
+            </div>
+            <span class="dashboard-count" id="productCountBadge">0 Produk</span>
+          </div>
+
+          <div class="form-field dashboard-search-field">
+            <label for="dashboardSearchInput" class="form-label">Cari Data Produk</label>
+            <input
+              type="text"
+              id="dashboardSearchInput"
+              class="form-control"
+              placeholder="Contoh: Acer, RTX, stok 5"
+            >
+          </div>
+
+          <div class="dashboard-export-bar">
+            <span class="dashboard-count" id="exportSelectionCount">0 Dipilih</span>
+            <div class="dashboard-export-actions">
+              <label class="dashboard-select-toggle dashboard-select-all">
+                <input type="checkbox" class="form-check-input" id="selectAllProductsCheckbox">
+                <span>Pilih Semua</span>
+              </label>
+              <button class="btn btn-outline-dark" id="selectFilteredButton" type="button">Pilih Hasil Filter</button>
+              <button class="btn btn-outline-dark" id="clearSelectionButton" type="button">Kosongkan Pilihan</button>
+              <a class="btn btn-danger" href="export.html" id="openExportButton">Buka Export PDF</a>
+              <a class="btn btn-outline-danger" href="export-kredit.html" id="openCreditExportButton">Buka Export Kredit</a>
+            </div>
+          </div>
+
+          <div id="dashboardList" class="dashboard-list"></div>
+          <nav class="dashboard-pagination-wrap" aria-label="Navigasi data produk dashboard">
+            <div id="dashboardPagination"></div>
+          </nav>
+        </article>
+
+        <article class="dashboard-card">
+          <div class="dashboard-list-head">
+            <div>
+              <h3 class="dashboard-title">Data Produk Kredit</h3>
+              <p class="dashboard-text mb-0">Kelola daftar produk khusus kredit dengan harga terpisah.</p>
+            </div>
+            <span class="dashboard-count" id="creditProductCountBadge">0 Produk Kredit</span>
+          </div>
+
+          <div class="dashboard-export-bar">
+            <span class="dashboard-count" id="creditExportSelectionCount">0 Dipilih</span>
+            <div class="dashboard-export-actions">
+              <label class="dashboard-select-toggle dashboard-select-all">
+                <input type="checkbox" class="form-check-input" id="selectAllCreditProductsCheckbox">
+                <span>Pilih Semua</span>
+              </label>
+              <button class="btn btn-outline-dark" id="selectFilteredCreditButton" type="button">Pilih Hasil Filter</button>
+              <button class="btn btn-outline-dark" id="clearCreditSelectionButton" type="button">Kosongkan Pilihan</button>
+              <a class="btn btn-outline-danger" href="export-kredit.html">Buka Export Kredit</a>
+            </div>
+          </div>
+
+          <div id="creditDashboardList" class="dashboard-list"></div>
+          <nav class="dashboard-pagination-wrap" aria-label="Navigasi data produk kredit dashboard">
+            <div id="creditDashboardPagination"></div>
+          </nav>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
