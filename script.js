@@ -2887,23 +2887,23 @@ function createExportCard(product, layoutType = "landscape") {
             <div class="export-card-computer-specs">
               ${createExportSpecs(product.specs)}
             </div>
-          </div>
-        </div>
-        <div class="export-card-computer-footer">
-          <div class="export-card-computer-brand">${escapeHtml(getBrandName(product))}</div>
-          <div class="export-card-computer-footer-right">
-            <div class="export-card-computer-badges">
-              <div class="export-product-type-badge">
-                ${escapeHtml(normalizedProductType)}
-              </div>
-              <div
-                class="export-category-badge"
-                style="--category-accent:${categoryTheme.accent}; --category-soft:${categoryTheme.soft};"
-              >
-                ${escapeHtml(product.category)}
+            <div class="export-card-computer-footer">
+              <div class="export-card-computer-brand">${escapeHtml(getBrandName(product))}</div>
+              <div class="export-card-computer-footer-right">
+                <div class="export-card-computer-badges">
+                  <div class="export-product-type-badge">
+                    ${escapeHtml(normalizedProductType)}
+                  </div>
+                  <div
+                    class="export-category-badge"
+                    style="--category-accent:${categoryTheme.accent}; --category-soft:${categoryTheme.soft};"
+                  >
+                    ${escapeHtml(product.category)}
+                  </div>
+                </div>
+                <div class="export-card-computer-price">${formatPrice(product.price)}</div>
               </div>
             </div>
-            <div class="export-card-computer-price">${formatPrice(product.price)}</div>
           </div>
         </div>
       </article>
