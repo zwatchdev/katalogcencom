@@ -383,6 +383,7 @@ const itemsPerPage = 10;
 const dashboardItemsPerPage = 6;
 const exportItemsPerPage = 12;
 const exportPortraitItemsPerPage = 6;
+const exportComputerItemsPerPage = 6;
 const defaultSpecTemplate = [
   ["Processor", ""],
   ["RAM", ""],
@@ -1339,11 +1340,29 @@ function clearBrandDragIndicators() {
 }
 
 function getExportLayoutType(product) {
-  return normalizeProductType(product?.productType) === "Laptop" ? "landscape" : "portrait";
+  const normalizedType = normalizeProductType(product?.productType);
+
+  if (normalizedType === "Laptop") {
+    return "landscape";
+  }
+
+  if (normalizedType === "Komputer") {
+    return "computer";
+  }
+
+  return "portrait";
 }
 
 function getExportItemsPerSheet(layoutType) {
-  return layoutType === "portrait" ? exportPortraitItemsPerPage : exportItemsPerPage;
+  if (layoutType === "portrait") {
+    return exportPortraitItemsPerPage;
+  }
+
+  if (layoutType === "computer") {
+    return exportComputerItemsPerPage;
+  }
+
+  return exportItemsPerPage;
 }
 
 function paginateExportProducts(items) {
@@ -2606,6 +2625,27 @@ function createPosterCaption(product) {
   `;
 }
 
+function createComputerLayoutSummary(product) {
+  if (!Array.isArray(product.specs)) {
+    return "";
+  }
+
+  return product.specs
+    .slice(0, 2)
+    .map(([key, value]) => {
+      const safeKey = String(key || "").trim();
+      const safeValue = String(value || "").trim();
+
+      if (!safeKey || !safeValue) {
+        return "";
+      }
+
+      return `${safeKey}: ${safeValue}`;
+    })
+    .filter(Boolean)
+    .join(" • ");
+}
+
 function isPngImageSource(src) {
   const value = String(src || "").trim().toLowerCase();
 
@@ -2673,6 +2713,60 @@ function createExportCard(product, layoutType = "landscape") {
           <div class="export-card-poster-bottom">
             <div class="export-card-poster-brandmark">${escapeHtml(getBrandName(product))}</div>
             <div class="export-card-price export-card-price-poster">${formatPrice(product.price)}</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  if (layoutType === "computer") {
+    const computerImageMarkup = supportsProductImage(normalizedProductType) && product.imageData
+      ? `
+          <div class="export-card-computer-media ${usesTransparentImage ? "is-transparent-image" : ""}">
+            <img src="${product.imageData}" alt="${escapeHtml(product.name)}" class="export-card-computer-media-image ${usesTransparentImage ? "is-transparent-image" : ""}">
+          </div>
+        `
+      : `
+          <div class="export-card-computer-media export-card-computer-media-placeholder">
+            ${escapeHtml(getBrandName(product))}
+          </div>
+        `;
+    const computerSummary = createComputerLayoutSummary(product);
+
+    return `
+      <article
+        class="export-card export-card-${layoutType} export-card-computer"
+        draggable="true"
+        data-export-product-id="${product.id}"
+        style="--product-accent:${brandTheme.accent}; --product-accent-dark:${brandTheme.accentDark}; --product-accent-soft:${brandTheme.accentSoft}; --category-accent:${categoryTheme.accent}; --category-soft:${categoryTheme.soft};"
+      >
+        <div class="export-card-computer-main">
+          <div class="export-card-computer-left">
+            <div class="export-card-computer-nameplate">
+              <div class="export-card-computer-title">${escapeHtml(product.name)}</div>
+              ${computerSummary ? `<div class="export-card-computer-summary">${escapeHtml(computerSummary)}</div>` : ""}
+            </div>
+            ${computerImageMarkup}
+            <div class="export-card-computer-footer">
+              <div class="export-card-computer-brand">${escapeHtml(getBrandName(product))}</div>
+              <div class="export-card-computer-price">${formatPrice(product.price)}</div>
+            </div>
+          </div>
+          <div class="export-card-computer-right">
+            <div class="export-card-computer-specs">
+              ${createExportSpecs(product.specs)}
+            </div>
+            <div class="export-card-computer-badges">
+              <div class="export-product-type-badge">
+                ${escapeHtml(normalizedProductType)}
+              </div>
+              <div
+                class="export-category-badge"
+                style="--category-accent:${categoryTheme.accent}; --category-soft:${categoryTheme.soft};"
+              >
+                ${escapeHtml(product.category)}
+              </div>
+            </div>
           </div>
         </div>
       </article>
@@ -2841,8 +2935,9 @@ function renderExportPreview() {
     .map(
       (page, pageIndex) => `
         <section
-          class="export-sheet export-sheet-${page.layoutType} ${page.layoutType === "portrait" ? "export-sheet-pricelist" : ""} ${pageIndex >= (exportPreviewPage - 1) * 3 && pageIndex < exportPreviewPage * 3 ? "" : "export-sheet-hidden"}"
+          class="export-sheet ${page.layoutType === "computer" ? "export-sheet-portrait export-sheet-pricelist export-sheet-computer" : `export-sheet-${page.layoutType} ${page.layoutType === "portrait" ? "export-sheet-pricelist" : ""}`} ${pageIndex >= (exportPreviewPage - 1) * 3 && pageIndex < exportPreviewPage * 3 ? "" : "export-sheet-hidden"}"
           data-export-sheet-index="${pageIndex + 1}"
+          ${page.layoutType === "landscape" ? `data-export-landscape-rows="${Math.ceil(page.items.length / 4)}"` : ""}
         >
           <div class="export-page-number">
             <span>Halaman ${pageIndex + 1}</span>
@@ -2856,10 +2951,10 @@ function renderExportPreview() {
             const customImagesMarkup = ensurePageCustomImages(pageIndex + 1)
               .map((imageSrc, index) => createCustomImageSlot(imageSrc, index))
               .join("");
-            const portraitHeadline = page.layoutType === "portrait"
+            const portraitHeadline = page.layoutType === "portrait" || page.layoutType === "computer"
               ? getPortraitPosterHeadline(page.items)
               : "";
-            const portraitSubheadline = page.layoutType === "portrait"
+            const portraitSubheadline = page.layoutType === "portrait" || page.layoutType === "computer"
               ? getPortraitPosterSubheadline(page.items)
               : "";
 
@@ -2882,7 +2977,7 @@ function renderExportPreview() {
               </div>
             </div>
             ${
-              page.layoutType === "portrait"
+              page.layoutType === "portrait" || page.layoutType === "computer"
                 ? `
                   <div class="export-sheet-headline">
                     <h1>${escapeHtml(portraitHeadline)}</h1>
@@ -2896,7 +2991,7 @@ function renderExportPreview() {
             `;
           })()}
 
-          <div class="export-sheet-grid-stage ${page.layoutType === "portrait" ? "export-sheet-grid-stage-portrait" : ""}">
+          <div class="export-sheet-grid-stage ${page.layoutType === "portrait" || page.layoutType === "computer" ? "export-sheet-grid-stage-portrait" : ""}">
             <div class="export-sheet-grid export-sheet-grid-${page.layoutType}">
               ${page.items.map((product) => createExportCard(product, page.layoutType)).join("")}
             </div>

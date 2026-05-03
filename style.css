@@ -1124,6 +1124,12 @@ body {
   transform-origin: top center;
 }
 
+.export-sheet-grid-computer {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3.2mm 3.2mm;
+  margin-top: 0;
+}
+
 .export-preview-pagination {
   margin-top: 1rem;
 }
@@ -1159,6 +1165,163 @@ body {
   border: none;
   background: transparent;
   overflow: visible;
+}
+
+.export-card-computer {
+  min-height: 84mm;
+  padding: 2.1mm;
+  border-color: rgba(41, 83, 163, 0.24);
+  border-radius: 5mm;
+  background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+  box-shadow: 0 1.1mm 2.4mm rgba(30, 64, 175, 0.08);
+}
+
+.export-card-computer-main {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
+  gap: 2.4mm;
+  height: 100%;
+}
+
+.export-card-computer-left,
+.export-card-computer-right {
+  min-width: 0;
+}
+
+.export-card-computer-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.export-card-computer-nameplate {
+  padding: 1.5mm 1.8mm 1.4mm;
+  border-radius: 4mm;
+  border: 0.35mm solid rgba(75, 85, 99, 0.52);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  text-align: center;
+  box-shadow: 0 0.8mm 1.6mm rgba(15, 23, 42, 0.08);
+}
+
+.export-card-computer-title {
+  color: rgba(31, 41, 55, 0.96);
+  font-size: 4.1mm;
+  line-height: 0.98;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.export-card-computer-summary {
+  margin-top: 0.6mm;
+  color: rgba(55, 65, 81, 0.9);
+  font-size: 2.25mm;
+  line-height: 1.1;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.export-card-computer-media {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 39mm;
+  margin-top: 1.8mm;
+  border-radius: 4mm;
+  border: 0.25mm solid rgba(17, 17, 17, 0.08);
+  background: linear-gradient(180deg, #f5f9ff 0%, #ffffff 100%);
+  overflow: hidden;
+}
+
+.export-card-computer-media.is-transparent-image {
+  background: transparent;
+}
+
+.export-card-computer-media-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 1.8mm;
+}
+
+.export-card-computer-media-image.is-transparent-image {
+  background: transparent;
+}
+
+.export-card-computer-media-placeholder {
+  padding: 4mm;
+  color: rgba(37, 99, 235, 0.92);
+  font-family: "Baloo 2", cursive;
+  font-size: 6.2mm;
+  line-height: 0.9;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.export-card-computer-footer {
+  margin-top: 1.8mm;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.4mm;
+}
+
+.export-card-computer-brand {
+  color: #1d4ed8;
+  font-family: "Baloo 2", cursive;
+  font-size: 4.9mm;
+  line-height: 0.92;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.export-card-computer-price {
+  padding: 1mm 2mm 1.1mm;
+  border-radius: 3.8mm;
+  background: linear-gradient(180deg, #75b5ff 0%, #5b9df1 100%);
+  box-shadow:
+    inset 0 0.35mm 0 rgba(255, 255, 255, 0.62),
+    0 0.9mm 1.6mm rgba(37, 99, 235, 0.22);
+  color: #17345a;
+  font-size: 5.2mm;
+  line-height: 0.92;
+  font-weight: 900;
+  text-align: center;
+}
+
+.export-card-computer-right {
+  display: flex;
+  flex-direction: column;
+  padding: 0.4mm 0;
+}
+
+.export-card-computer-specs {
+  display: grid;
+  gap: 0.55mm;
+}
+
+.export-card-computer-specs .export-spec-row {
+  grid-template-columns: minmax(17mm, 23mm) 1.8mm 1fr;
+  gap: 0.2mm 0.65mm;
+  font-size: 2.8mm;
+  line-height: 1.05;
+}
+
+.export-card-computer-specs .export-spec-key,
+.export-card-computer-specs .export-spec-colon,
+.export-card-computer-specs .export-spec-value {
+  font-size: 2.95mm;
+}
+
+.export-card-computer-badges {
+  margin-top: auto;
+  padding-top: 1.8mm;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.2mm;
+  flex-wrap: wrap;
 }
 
 .export-card:active {
@@ -1752,6 +1915,10 @@ body {
     min-height: 285mm;
   }
 
+  .export-sheet-computer {
+    min-height: 285mm;
+  }
+
   .export-sheet-header,
   .export-sheet-grid-stage,
   .export-sheet-grid,
@@ -1763,6 +1930,50 @@ body {
   .export-sheet:last-child {
     page-break-after: auto;
     break-after: auto;
+  }
+
+  .export-credit-page .export-sheet-landscape {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .export-credit-page .export-sheet-landscape .export-sheet-grid-stage {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+  }
+
+  .export-credit-page .export-sheet-landscape .export-sheet-grid-landscape {
+    width: 100%;
+  }
+
+  .export-credit-page .export-sheet-landscape[data-export-landscape-rows="3"] .export-sheet-grid-landscape {
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    align-content: stretch;
+    height: 100%;
+  }
+
+  .export-sheet-computer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .export-sheet-computer .export-sheet-grid-stage-portrait {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+  }
+
+  .export-sheet-computer .export-sheet-grid-computer {
+    flex: 1;
+    align-content: stretch;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+  }
+
+  .export-sheet-computer .export-card-computer {
+    min-height: 0;
+    height: 100%;
   }
 
   .export-credit-page .export-card-landscape {
