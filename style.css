@@ -2101,11 +2101,12 @@ body {
   }
 
   .export-sheet-computer .export-card-computer-media {
-    min-height: 23.5mm;
-    max-height: 25.5mm;
+    min-height: 26.5mm;
+    max-height: 28.5mm;
   }
 
   .export-sheet-computer .export-card-computer-media-image {
+    object-fit: contain;
     padding: 0;
   }
 
@@ -2119,14 +2120,14 @@ body {
 
   .export-sheet-computer .export-card-computer-specs .export-spec-row {
     grid-template-columns: minmax(13.5mm, 17mm) 1.4mm minmax(0, 1fr);
-    font-size: 2.8mm;
-    line-height: 1.06;
+    font-size: 2.65mm;
+    line-height: 1.03;
   }
 
   .export-sheet-computer .export-card-computer-specs .export-spec-key,
   .export-sheet-computer .export-card-computer-specs .export-spec-colon,
   .export-sheet-computer .export-card-computer-specs .export-spec-value {
-    font-size: 2.9mm;
+    font-size: 2.75mm;
   }
 
   .export-sheet-computer .export-card-computer-badges .export-product-type-badge,
