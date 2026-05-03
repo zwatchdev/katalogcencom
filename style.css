@@ -1280,14 +1280,6 @@ body {
   min-width: 0;
 }
 
-.export-card-computer-header {
-  display: grid;
-  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
-  gap: 1.4mm;
-  align-items: stretch;
-  min-width: 0;
-}
-
 .export-card-computer-nameplate {
   padding: 1.45mm 1.7mm 1.35mm;
   border-radius: 4mm;
@@ -1313,8 +1305,8 @@ body {
 .export-card-computer-media {
   display: grid;
   place-items: center;
-  min-height: 21mm;
-  height: 100%;
+  min-height: 27mm;
+  max-height: 29mm;
   border-radius: 4mm;
   border: 0.25mm solid rgba(17, 17, 17, 0.08);
   background: linear-gradient(180deg, #f5f9ff 0%, #ffffff 100%);
@@ -1329,9 +1321,9 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-  padding: 0;
+  padding: 1.2mm;
 }
 
 .export-card-computer-media-image.is-transparent-image {
@@ -2096,13 +2088,8 @@ body {
     gap: 0.95mm;
   }
 
-  .export-sheet-computer .export-card-computer-header {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 1.05mm;
-  }
-
   .export-sheet-computer .export-card-computer-title {
-    font-size: 3.75mm;
+    font-size: 3.85mm;
   }
 
   .export-sheet-computer .export-card-computer-summary {
@@ -2110,12 +2097,13 @@ body {
   }
 
   .export-sheet-computer .export-card-computer-media {
-    min-height: 17.5mm;
+    min-height: 21mm;
+    max-height: 23mm;
   }
 
   .export-sheet-computer .export-card-computer-media-image {
     object-fit: contain;
-    padding: 0;
+    padding: 0.8mm;
   }
 
   .export-sheet-computer .export-card-computer-media-image.is-transparent-image {
@@ -2128,14 +2116,14 @@ body {
 
   .export-sheet-computer .export-card-computer-specs .export-spec-row {
     grid-template-columns: minmax(13.5mm, 17mm) 1.4mm minmax(0, 1fr);
-    font-size: 2.65mm;
-    line-height: 1.03;
+    font-size: 2.55mm;
+    line-height: 1.02;
   }
 
   .export-sheet-computer .export-card-computer-specs .export-spec-key,
   .export-sheet-computer .export-card-computer-specs .export-spec-colon,
   .export-sheet-computer .export-card-computer-specs .export-spec-value {
-    font-size: 2.75mm;
+    font-size: 2.65mm;
   }
 
   .export-sheet-computer .export-card-computer-badges .export-product-type-badge,

@@ -2874,14 +2874,12 @@ function createExportCard(product, layoutType = "landscape") {
         style="--product-accent:${brandTheme.accent}; --product-accent-dark:${brandTheme.accentDark}; --product-accent-soft:${brandTheme.accentSoft}; --category-accent:${categoryTheme.accent}; --category-soft:${categoryTheme.soft};"
       >
         <div class="export-card-computer-main">
-          <div class="export-card-computer-header">
-            ${computerImageMarkup}
-            <div class="export-card-computer-specs">
-              ${createExportSpecs(product.specs)}
-            </div>
-          </div>
           <div class="export-card-computer-nameplate">
             <div class="export-card-computer-title">${escapeHtml(product.name)}</div>
+          </div>
+          ${computerImageMarkup}
+          <div class="export-card-computer-specs">
+            ${createExportSpecs(product.specs)}
           </div>
           <div class="export-card-computer-footer">
             <div class="export-card-computer-footer-right">
