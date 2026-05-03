@@ -1280,6 +1280,14 @@ body {
   min-width: 0;
 }
 
+.export-card-computer-header {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  gap: 1.4mm;
+  align-items: stretch;
+  min-width: 0;
+}
+
 .export-card-computer-nameplate {
   padding: 1.45mm 1.7mm 1.35mm;
   border-radius: 4mm;
@@ -1287,6 +1295,7 @@ body {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   text-align: left;
   box-shadow: 0 0.8mm 1.6mm rgba(15, 23, 42, 0.08);
+  min-width: 0;
 }
 
 .export-card-computer-title {
@@ -1309,8 +1318,8 @@ body {
 .export-card-computer-media {
   display: grid;
   place-items: center;
-  min-height: 29mm;
-  max-height: 31mm;
+  min-height: 21mm;
+  height: 100%;
   border-radius: 4mm;
   border: 0.25mm solid rgba(17, 17, 17, 0.08);
   background: linear-gradient(180deg, #f5f9ff 0%, #ffffff 100%);
@@ -2092,6 +2101,11 @@ body {
     gap: 0.95mm;
   }
 
+  .export-sheet-computer .export-card-computer-header {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 1.05mm;
+  }
+
   .export-sheet-computer .export-card-computer-title {
     font-size: 3.75mm;
   }
@@ -2101,8 +2115,7 @@ body {
   }
 
   .export-sheet-computer .export-card-computer-media {
-    min-height: 26.5mm;
-    max-height: 28.5mm;
+    min-height: 17.5mm;
   }
 
   .export-sheet-computer .export-card-computer-media-image {
