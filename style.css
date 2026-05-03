@@ -1319,7 +1319,7 @@ body {
 
 .export-card-computer-media-image {
   display: block;
-  height: 50%;
+  width: 50%;
   object-fit: contain;
   object-position: center;
   padding: 0;
