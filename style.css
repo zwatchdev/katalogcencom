@@ -1273,19 +1273,11 @@ body {
 }
 
 .export-card-computer-main {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 2.8mm;
-}
-
-.export-card-computer-left,
-.export-card-computer-right {
-  min-width: 0;
-}
-
-.export-card-computer-left {
   display: flex;
   flex-direction: column;
+  gap: 1.5mm;
+  min-height: 100%;
+  min-width: 0;
 }
 
 .export-card-computer-nameplate {
@@ -1299,8 +1291,8 @@ body {
 
 .export-card-computer-title {
   color: rgba(31, 41, 55, 0.96);
-  font-size: 3.8mm;
-  line-height: 1.02;
+  font-size: 4.25mm;
+  line-height: 1.05;
   font-weight: 900;
   text-transform: uppercase;
 }
@@ -1308,8 +1300,8 @@ body {
 .export-card-computer-summary {
   margin-top: 0.55mm;
   color: rgba(55, 65, 81, 0.9);
-  font-size: 2.15mm;
-  line-height: 1.16;
+  font-size: 2.35mm;
+  line-height: 1.2;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -1317,8 +1309,8 @@ body {
 .export-card-computer-media {
   display: grid;
   place-items: center;
-  min-height: 42mm;
-  margin-top: 1.5mm;
+  min-height: 29mm;
+  max-height: 31mm;
   border-radius: 4mm;
   border: 0.25mm solid rgba(17, 17, 17, 0.08);
   background: linear-gradient(180deg, #f5f9ff 0%, #ffffff 100%);
@@ -1355,7 +1347,7 @@ body {
 
 .export-card-computer-footer {
   margin-top: auto;
-  padding-top: 1.8mm;
+  padding-top: 1.1mm;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
@@ -1386,31 +1378,25 @@ body {
   white-space: nowrap;
 }
 
-.export-card-computer-right {
-  display: flex;
-  flex-direction: column;
-  padding: 0.25mm 0 0.1mm;
-  min-height: 0;
-}
-
 .export-card-computer-specs {
   display: grid;
   gap: 0.62mm;
   align-content: start;
+  min-width: 0;
 }
 
 .export-card-computer-specs .export-spec-row {
   grid-template-columns: minmax(14mm, 18mm) 1.5mm minmax(0, 1fr);
   gap: 0.18mm 0.55mm;
-  font-size: 3.05mm;
-  line-height: 1.1;
+  font-size: 3.3mm;
+  line-height: 1.14;
 }
 
 .export-card-computer-specs .export-spec-key,
 .export-card-computer-specs .export-spec-colon,
 .export-card-computer-specs .export-spec-value {
-  font-size: 3.15mm;
-  line-height: 1.1;
+  font-size: 3.4mm;
+  line-height: 1.14;
 }
 
 .export-card-computer-specs .export-spec-key,
@@ -1429,7 +1415,7 @@ body {
   justify-content: flex-end;
   gap: 0.8mm;
   flex-wrap: wrap;
-  max-width: 22mm;
+  max-width: none;
 }
 
 .export-card-computer-badges .export-product-type-badge,
@@ -2099,28 +2085,27 @@ body {
   }
 
   .export-sheet-computer .export-card-computer-main {
-    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
-    gap: 2.5mm;
+    gap: 1.35mm;
   }
 
   .export-sheet-computer .export-card-computer-title {
-    font-size: 3.65mm;
+    font-size: 4.05mm;
   }
 
   .export-sheet-computer .export-card-computer-summary {
-    font-size: 2.05mm;
+    font-size: 2.25mm;
   }
 
   .export-sheet-computer .export-card-computer-specs .export-spec-row {
     grid-template-columns: minmax(13.5mm, 17mm) 1.4mm minmax(0, 1fr);
-    font-size: 2.9mm;
-    line-height: 1.08;
+    font-size: 3.15mm;
+    line-height: 1.12;
   }
 
   .export-sheet-computer .export-card-computer-specs .export-spec-key,
   .export-sheet-computer .export-card-computer-specs .export-spec-colon,
   .export-sheet-computer .export-card-computer-specs .export-spec-value {
-    font-size: 3mm;
+    font-size: 3.2mm;
   }
 
   .export-sheet-computer .export-card-computer-price {
