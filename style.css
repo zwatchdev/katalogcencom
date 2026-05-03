@@ -1358,20 +1358,8 @@ body {
   padding-top: 1.8mm;
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1.8mm;
-}
-
-.export-card-computer-brand {
-  color: #1d4ed8;
-  font-family: "Baloo 2", cursive;
-  font-size: 4.3mm;
-  line-height: 0.96;
-  font-weight: 900;
-  text-transform: uppercase;
-  flex: 1;
-  min-width: 0;
-  word-break: break-word;
 }
 
 .export-card-computer-footer-right {
@@ -2133,10 +2121,6 @@ body {
   .export-sheet-computer .export-card-computer-specs .export-spec-colon,
   .export-sheet-computer .export-card-computer-specs .export-spec-value {
     font-size: 3mm;
-  }
-
-  .export-sheet-computer .export-card-computer-brand {
-    font-size: 4mm;
   }
 
   .export-sheet-computer .export-card-computer-price {

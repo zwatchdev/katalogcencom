@@ -2888,7 +2888,6 @@ function createExportCard(product, layoutType = "landscape") {
               ${createExportSpecs(product.specs)}
             </div>
             <div class="export-card-computer-footer">
-              <div class="export-card-computer-brand">${escapeHtml(getBrandName(product))}</div>
               <div class="export-card-computer-footer-right">
                 <div class="export-card-computer-badges">
                   <div class="export-product-type-badge">
