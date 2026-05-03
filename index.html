@@ -45,6 +45,20 @@
               >
               <button class="btn btn-danger" id="searchButton" type="button">Cari</button>
             </div>
+            <div class="price-filter" aria-label="Filter harga katalog">
+              <div class="price-filter-head">
+                <span class="price-filter-title">Range Harga</span>
+                <span class="price-filter-values">
+                  <strong id="catalogPriceMinValue">Rp 0</strong>
+                  <span>-</span>
+                  <strong id="catalogPriceMaxValue">Rp 0</strong>
+                </span>
+              </div>
+              <div class="price-filter-sliders">
+                <input type="range" id="catalogPriceMinRange" class="form-range" min="0" max="0" value="0" step="50000">
+                <input type="range" id="catalogPriceMaxRange" class="form-range" min="0" max="0" value="0" step="50000">
+              </div>
+            </div>
             <p class="search-note mb-0">Gunakan pencarian untuk menemukan produk lebih cepat.</p>
           </div>
         </div>

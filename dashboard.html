@@ -213,6 +213,21 @@
             >
           </div>
 
+          <div class="price-filter" aria-label="Filter harga produk cash">
+            <div class="price-filter-head">
+              <span class="price-filter-title">Range Harga Cash</span>
+              <span class="price-filter-values">
+                <strong id="dashboardCashPriceMinValue">Rp 0</strong>
+                <span>-</span>
+                <strong id="dashboardCashPriceMaxValue">Rp 0</strong>
+              </span>
+            </div>
+            <div class="price-filter-sliders">
+              <input type="range" id="dashboardCashPriceMinRange" class="form-range" min="0" max="0" value="0" step="50000">
+              <input type="range" id="dashboardCashPriceMaxRange" class="form-range" min="0" max="0" value="0" step="50000">
+            </div>
+          </div>
+
           <div class="dashboard-export-bar">
             <span class="dashboard-count" id="exportSelectionCount">0 Dipilih</span>
             <div class="dashboard-export-actions">
@@ -252,6 +267,21 @@
               <button class="btn btn-outline-dark" id="selectFilteredCreditButton" type="button">Pilih Hasil Filter</button>
               <button class="btn btn-outline-dark" id="clearCreditSelectionButton" type="button">Kosongkan Pilihan</button>
               <a class="btn btn-outline-danger" href="export-kredit.html">Buka Export Kredit</a>
+            </div>
+          </div>
+
+          <div class="price-filter" aria-label="Filter harga produk kredit">
+            <div class="price-filter-head">
+              <span class="price-filter-title">Range Harga Kredit</span>
+              <span class="price-filter-values">
+                <strong id="dashboardCreditPriceMinValue">Rp 0</strong>
+                <span>-</span>
+                <strong id="dashboardCreditPriceMaxValue">Rp 0</strong>
+              </span>
+            </div>
+            <div class="price-filter-sliders">
+              <input type="range" id="dashboardCreditPriceMinRange" class="form-range" min="0" max="0" value="0" step="50000">
+              <input type="range" id="dashboardCreditPriceMaxRange" class="form-range" min="0" max="0" value="0" step="50000">
             </div>
           </div>
 

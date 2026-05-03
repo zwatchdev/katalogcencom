@@ -146,6 +146,20 @@
       <article class="dashboard-card export-summary-card export-toolbar">
         <h2 class="dashboard-title">Ringkasan Produk Kredit Terpilih</h2>
         <p class="dashboard-text" id="exportSelectionSummary">0 produk kredit dipilih.</p>
+        <div class="price-filter" aria-label="Filter harga export kredit">
+          <div class="price-filter-head">
+            <span class="price-filter-title">Range Harga Export Kredit</span>
+            <span class="price-filter-values">
+              <strong id="exportPriceMinValue">Rp 0</strong>
+              <span>-</span>
+              <strong id="exportPriceMaxValue">Rp 0</strong>
+            </span>
+          </div>
+          <div class="price-filter-sliders">
+            <input type="range" id="exportPriceMinRange" class="form-range" min="0" max="0" value="0" step="50000">
+            <input type="range" id="exportPriceMaxRange" class="form-range" min="0" max="0" value="0" step="50000">
+          </div>
+        </div>
         <div id="exportSelectedBrands" class="export-brand-list"></div>
       </article>
 

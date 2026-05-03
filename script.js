@@ -302,6 +302,10 @@ const catalogBannerImage = document.getElementById("catalogBannerImage");
 const productList = document.getElementById("productList");
 const pagination = document.getElementById("pagination");
 const searchInput = document.getElementById("searchInput");
+const catalogPriceMinRange = document.getElementById("catalogPriceMinRange");
+const catalogPriceMaxRange = document.getElementById("catalogPriceMaxRange");
+const catalogPriceMinValue = document.getElementById("catalogPriceMinValue");
+const catalogPriceMaxValue = document.getElementById("catalogPriceMaxValue");
 const searchButton = document.getElementById("searchButton");
 const infoStoreButton = document.getElementById("infoStoreButton");
 const contactButton = document.getElementById("contactButton");
@@ -339,6 +343,14 @@ const selectAllCreditProductsCheckbox = document.getElementById("selectAllCredit
 const selectFilteredCreditButton = document.getElementById("selectFilteredCreditButton");
 const clearCreditSelectionButton = document.getElementById("clearCreditSelectionButton");
 const dashboardSearchInput = document.getElementById("dashboardSearchInput");
+const dashboardCashPriceMinRange = document.getElementById("dashboardCashPriceMinRange");
+const dashboardCashPriceMaxRange = document.getElementById("dashboardCashPriceMaxRange");
+const dashboardCashPriceMinValue = document.getElementById("dashboardCashPriceMinValue");
+const dashboardCashPriceMaxValue = document.getElementById("dashboardCashPriceMaxValue");
+const dashboardCreditPriceMinRange = document.getElementById("dashboardCreditPriceMinRange");
+const dashboardCreditPriceMaxRange = document.getElementById("dashboardCreditPriceMaxRange");
+const dashboardCreditPriceMinValue = document.getElementById("dashboardCreditPriceMinValue");
+const dashboardCreditPriceMaxValue = document.getElementById("dashboardCreditPriceMaxValue");
 const exportSelectionCount = document.getElementById("exportSelectionCount");
 const selectAllProductsCheckbox = document.getElementById("selectAllProductsCheckbox");
 const selectFilteredButton = document.getElementById("selectFilteredButton");
@@ -370,6 +382,10 @@ const exportPreview = document.getElementById("exportPreview");
 const exportPreviewPagination = document.getElementById("exportPreviewPagination");
 const exportSelectionSummary = document.getElementById("exportSelectionSummary");
 const exportSelectedBrands = document.getElementById("exportSelectedBrands");
+const exportPriceMinRange = document.getElementById("exportPriceMinRange");
+const exportPriceMaxRange = document.getElementById("exportPriceMaxRange");
+const exportPriceMinValue = document.getElementById("exportPriceMinValue");
+const exportPriceMaxValue = document.getElementById("exportPriceMaxValue");
 
 const currencyFormatter = new Intl.NumberFormat("id-ID");
 const productTypes = ["Laptop", "Printer", "Monitor", "Komputer", "Proyektor"];
@@ -489,6 +505,7 @@ let supabaseClientLoadPromise = null;
 let remoteSupabaseUrl = "";
 let remoteSupabaseAnonKey = "";
 let remoteAuthenticated = false;
+let remoteAuthResolved = false;
 let activeExportPage = 1;
 let draggedExportProductId = "";
 let draggedExportElement = null;
@@ -502,6 +519,19 @@ let activeCatalogProductType = "Laptop";
 let pendingProductImageData = "";
 let pendingSiteBannerData = siteSettings.bannerImage || "";
 let siteSettingsSaveTimer = null;
+let catalogPriceFilter = createPriceFilterState();
+let dashboardCashPriceFilter = createPriceFilterState();
+let dashboardCreditPriceFilter = createPriceFilterState();
+let exportPriceFilter = createPriceFilterState();
+
+function createPriceFilterState() {
+  return {
+    min: 0,
+    max: 0,
+    selectedMin: 0,
+    selectedMax: 0
+  };
+}
 
 function normalizeProductType(value) {
   return productTypes.includes(value) ? value : "Laptop";
@@ -513,6 +543,70 @@ function normalizeCatalogTab(value) {
 
 function normalizePriceMode(value) {
   return String(value || "").trim() === "Kredit" ? "Kredit" : "Cash";
+}
+
+function getPriceBounds(items) {
+  const prices = items
+    .map((product) => Number(product?.price) || 0)
+    .filter((price) => Number.isFinite(price));
+
+  if (!prices.length) {
+    return { min: 0, max: 0 };
+  }
+
+  return {
+    min: Math.max(0, Math.min(...prices)),
+    max: Math.max(0, Math.max(...prices))
+  };
+}
+
+function syncPriceFilterState(state, items) {
+  const bounds = getPriceBounds(items);
+  state.min = bounds.min;
+  state.max = bounds.max;
+
+  if (!Number.isFinite(state.selectedMin) || state.selectedMin < bounds.min) {
+    state.selectedMin = bounds.min;
+  }
+
+  if (!Number.isFinite(state.selectedMax) || state.selectedMax > bounds.max || state.selectedMax === 0) {
+    state.selectedMax = bounds.max;
+  }
+
+  if (state.selectedMin > state.selectedMax) {
+    state.selectedMin = bounds.min;
+    state.selectedMax = bounds.max;
+  }
+}
+
+function formatPriceCompact(value) {
+  return `Rp ${currencyFormatter.format(Math.max(0, Number(value) || 0))}`;
+}
+
+function renderPriceFilterControls(state, controls) {
+  const { minRange, maxRange, minValueLabel, maxValueLabel } = controls;
+
+  if (!minRange || !maxRange || !minValueLabel || !maxValueLabel) {
+    return;
+  }
+
+  minRange.min = String(state.min);
+  minRange.max = String(state.max);
+  minRange.value = String(state.selectedMin);
+  minRange.disabled = state.min === state.max;
+
+  maxRange.min = String(state.min);
+  maxRange.max = String(state.max);
+  maxRange.value = String(state.selectedMax);
+  maxRange.disabled = state.min === state.max;
+
+  minValueLabel.textContent = formatPriceCompact(state.selectedMin);
+  maxValueLabel.textContent = formatPriceCompact(state.selectedMax);
+}
+
+function isPriceWithinRange(price, state) {
+  const safePrice = Number(price) || 0;
+  return safePrice >= state.selectedMin && safePrice <= state.selectedMax;
 }
 
 function usesDescriptionField(productType) {
@@ -769,6 +863,7 @@ async function loadRemoteSiteSettings() {
 async function refreshRemoteAuthState() {
   if (!isRemoteDataMode()) {
     remoteAuthenticated = false;
+    remoteAuthResolved = true;
     return false;
   }
 
@@ -778,6 +873,8 @@ async function refreshRemoteAuthState() {
   } catch (error) {
     remoteAuthenticated = false;
   }
+
+  remoteAuthResolved = true;
 
   return remoteAuthenticated;
 }
@@ -1167,6 +1264,7 @@ function getCategoryTheme(category) {
 
 function getFilteredDashboardProducts(scope = "cash") {
   const keyword = dashboardSearchInput ? dashboardSearchInput.value.trim().toLowerCase() : "";
+  const activePriceFilter = scope === "credit" ? dashboardCreditPriceFilter : dashboardCashPriceFilter;
 
   return products.filter((product) => {
     const isCreditItem = isCreditProduct(product);
@@ -1193,7 +1291,7 @@ function getFilteredDashboardProducts(scope = "cash") {
       .join(" ")
       .toLowerCase();
 
-    return haystack.includes(keyword);
+    return haystack.includes(keyword) && isPriceWithinRange(product.price, activePriceFilter);
   });
 }
 
@@ -1201,7 +1299,8 @@ function getSelectedExportProducts() {
   const selectedProducts = exportState.selectedProductIds
     .map((productId) => findProduct(productId))
     .filter(Boolean)
-    .filter(matchesCurrentExportScope);
+    .filter(matchesCurrentExportScope)
+    .filter((product) => isPriceWithinRange(product.price, exportPriceFilter));
 
   if (!exportState.manualOrder) {
     return [...selectedProducts].sort(compareProductsByBrandAndName);
@@ -1987,6 +2086,21 @@ function renderDashboardList() {
     return;
   }
 
+  syncPriceFilterState(dashboardCashPriceFilter, products.filter((product) => !isCreditProduct(product)));
+  syncPriceFilterState(dashboardCreditPriceFilter, products.filter((product) => isCreditProduct(product)));
+  renderPriceFilterControls(dashboardCashPriceFilter, {
+    minRange: dashboardCashPriceMinRange,
+    maxRange: dashboardCashPriceMaxRange,
+    minValueLabel: dashboardCashPriceMinValue,
+    maxValueLabel: dashboardCashPriceMaxValue
+  });
+  renderPriceFilterControls(dashboardCreditPriceFilter, {
+    minRange: dashboardCreditPriceMinRange,
+    maxRange: dashboardCreditPriceMaxRange,
+    minValueLabel: dashboardCreditPriceMinValue,
+    maxValueLabel: dashboardCreditPriceMaxValue
+  });
+
   const filteredDashboardProducts = getFilteredDashboardProducts("cash");
   const filteredCreditProducts = getFilteredDashboardProducts("credit");
   const cashSelectedIds = exportState.selectedProductIds.filter((productId) => {
@@ -2376,6 +2490,24 @@ function findProduct(productId) {
 
 function syncCatalog() {
   const keyword = searchInput ? searchInput.value.trim().toLowerCase() : "";
+  const catalogItems = products.filter((product) => {
+    if (product.hidden) {
+      return false;
+    }
+
+    const normalizedProductType = normalizeProductType(product.productType);
+    return activeCatalogProductType === "Kredit"
+      ? isCreditProduct(product)
+      : normalizedProductType === activeCatalogProductType && !isCreditProduct(product);
+  });
+
+  syncPriceFilterState(catalogPriceFilter, catalogItems);
+  renderPriceFilterControls(catalogPriceFilter, {
+    minRange: catalogPriceMinRange,
+    maxRange: catalogPriceMaxRange,
+    minValueLabel: catalogPriceMinValue,
+    maxValueLabel: catalogPriceMaxValue
+  });
 
   filteredProducts = products.filter((product) => {
     if (product.hidden) {
@@ -2400,7 +2532,7 @@ function syncCatalog() {
       ? isCreditProduct(product)
       : normalizedProductType === activeCatalogProductType && !isCreditProduct(product);
 
-    return haystack.includes(keyword) && matchesTab;
+    return haystack.includes(keyword) && matchesTab && isPriceWithinRange(product.price, catalogPriceFilter);
   });
 
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage));
@@ -2414,23 +2546,26 @@ function syncCatalog() {
 }
 
 function isAuthenticated() {
-  return isRemoteDataMode()
-    ? remoteAuthenticated
-    : sessionStorage.getItem(authStorageKey) === "true";
+  const hasStoredAuthHint = sessionStorage.getItem(authStorageKey) === "true";
+
+  if (isRemoteDataMode()) {
+    return remoteAuthenticated || (!remoteAuthResolved && hasStoredAuthHint);
+  }
+
+  return hasStoredAuthHint;
 }
 
 function setAuthenticated(value) {
+  if (value) {
+    sessionStorage.setItem(authStorageKey, "true");
+  } else {
+    sessionStorage.removeItem(authStorageKey);
+  }
+
   if (isRemoteDataMode()) {
     remoteAuthenticated = Boolean(value);
     return;
   }
-
-  if (value) {
-    sessionStorage.setItem(authStorageKey, "true");
-    return;
-  }
-
-  sessionStorage.removeItem(authStorageKey);
 }
 
 function showDashboardState() {
@@ -2747,15 +2882,16 @@ function createExportCard(product, layoutType = "landscape") {
               ${computerSummary ? `<div class="export-card-computer-summary">${escapeHtml(computerSummary)}</div>` : ""}
             </div>
             ${computerImageMarkup}
-            <div class="export-card-computer-footer">
-              <div class="export-card-computer-brand">${escapeHtml(getBrandName(product))}</div>
-              <div class="export-card-computer-price">${formatPrice(product.price)}</div>
-            </div>
           </div>
           <div class="export-card-computer-right">
             <div class="export-card-computer-specs">
               ${createExportSpecs(product.specs)}
             </div>
+          </div>
+        </div>
+        <div class="export-card-computer-footer">
+          <div class="export-card-computer-brand">${escapeHtml(getBrandName(product))}</div>
+          <div class="export-card-computer-footer-right">
             <div class="export-card-computer-badges">
               <div class="export-product-type-badge">
                 ${escapeHtml(normalizedProductType)}
@@ -2767,6 +2903,7 @@ function createExportCard(product, layoutType = "landscape") {
                 ${escapeHtml(product.category)}
               </div>
             </div>
+            <div class="export-card-computer-price">${formatPrice(product.price)}</div>
           </div>
         </div>
       </article>
@@ -2880,6 +3017,17 @@ function renderExportPreview() {
   if (!exportPreview || !exportSelectionSummary || !exportSelectedBrands) {
     return;
   }
+
+  syncPriceFilterState(exportPriceFilter, exportState.selectedProductIds
+    .map((productId) => findProduct(productId))
+    .filter(Boolean)
+    .filter(matchesCurrentExportScope));
+  renderPriceFilterControls(exportPriceFilter, {
+    minRange: exportPriceMinRange,
+    maxRange: exportPriceMaxRange,
+    minValueLabel: exportPriceMinValue,
+    maxValueLabel: exportPriceMaxValue
+  });
 
   syncExportSelection();
   const selectedProducts = getSelectedExportProducts();
@@ -4209,6 +4357,47 @@ if (searchInput) {
   });
 }
 
+function attachPriceRangeHandlers(minRange, maxRange, state, onChange) {
+  if (!minRange || !maxRange) {
+    return;
+  }
+
+  const applyMin = () => {
+    state.selectedMin = Math.min(Number(minRange.value), state.selectedMax);
+    minRange.value = String(state.selectedMin);
+    onChange();
+  };
+
+  const applyMax = () => {
+    state.selectedMax = Math.max(Number(maxRange.value), state.selectedMin);
+    maxRange.value = String(state.selectedMax);
+    onChange();
+  };
+
+  minRange.addEventListener("input", applyMin);
+  maxRange.addEventListener("input", applyMax);
+}
+
+attachPriceRangeHandlers(catalogPriceMinRange, catalogPriceMaxRange, catalogPriceFilter, () => {
+  currentPage = 1;
+  syncCatalog();
+});
+
+attachPriceRangeHandlers(dashboardCashPriceMinRange, dashboardCashPriceMaxRange, dashboardCashPriceFilter, () => {
+  dashboardCurrentPage = 1;
+  renderDashboardList();
+});
+
+attachPriceRangeHandlers(dashboardCreditPriceMinRange, dashboardCreditPriceMaxRange, dashboardCreditPriceFilter, () => {
+  creditDashboardCurrentPage = 1;
+  renderDashboardList();
+});
+
+attachPriceRangeHandlers(exportPriceMinRange, exportPriceMaxRange, exportPriceFilter, () => {
+  exportPreviewPage = 1;
+  renderExportPreview();
+});
+
 if (infoStoreButton) {
   infoStoreButton.addEventListener("click", () => {
     Swal.fire({
@@ -4390,6 +4579,7 @@ async function bootstrapApplication() {
   syncExportSelection();
   renderCatalogBanner();
   renderSiteBannerPreview();
+  remoteAuthResolved = !loginSection && !dashboardSection && !exportGuard;
   refreshVisiblePageState();
 
   try {
