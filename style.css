@@ -1325,12 +1325,14 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
-  padding: 1.5mm;
+  padding: 0;
 }
 
 .export-card-computer-media-image.is-transparent-image {
+  object-fit: contain;
+  padding: 1.5mm;
   background: transparent;
 }
 
@@ -2071,6 +2073,8 @@ body {
 
   .export-sheet-computer .export-sheet-grid-computer {
     flex: 1;
+    height: 100%;
+    min-height: 0;
     align-content: stretch;
     grid-template-rows: repeat(3, minmax(0, 1fr));
   }
@@ -2081,35 +2085,58 @@ body {
   }
 
   .export-sheet-computer .export-card-computer {
-    padding: 2mm 2mm 2.2mm;
+    padding: 1.7mm 1.8mm 1.9mm;
   }
 
   .export-sheet-computer .export-card-computer-main {
-    gap: 1.35mm;
+    gap: 0.95mm;
   }
 
   .export-sheet-computer .export-card-computer-title {
-    font-size: 4.05mm;
+    font-size: 3.75mm;
   }
 
   .export-sheet-computer .export-card-computer-summary {
-    font-size: 2.25mm;
+    font-size: 2mm;
+  }
+
+  .export-sheet-computer .export-card-computer-media {
+    min-height: 23.5mm;
+    max-height: 25.5mm;
+  }
+
+  .export-sheet-computer .export-card-computer-media-image {
+    padding: 0;
+  }
+
+  .export-sheet-computer .export-card-computer-media-image.is-transparent-image {
+    padding: 1.1mm;
+  }
+
+  .export-sheet-computer .export-card-computer-footer {
+    padding-top: 0.75mm;
   }
 
   .export-sheet-computer .export-card-computer-specs .export-spec-row {
     grid-template-columns: minmax(13.5mm, 17mm) 1.4mm minmax(0, 1fr);
-    font-size: 3.15mm;
-    line-height: 1.12;
+    font-size: 2.8mm;
+    line-height: 1.06;
   }
 
   .export-sheet-computer .export-card-computer-specs .export-spec-key,
   .export-sheet-computer .export-card-computer-specs .export-spec-colon,
   .export-sheet-computer .export-card-computer-specs .export-spec-value {
-    font-size: 3.2mm;
+    font-size: 2.9mm;
+  }
+
+  .export-sheet-computer .export-card-computer-badges .export-product-type-badge,
+  .export-sheet-computer .export-card-computer-badges .export-category-badge {
+    font-size: 1.7mm;
+    padding: 0.35mm 0.9mm;
   }
 
   .export-sheet-computer .export-card-computer-price {
-    font-size: 4.2mm;
+    font-size: 3.9mm;
   }
 
   .export-credit-page .export-card-landscape {
