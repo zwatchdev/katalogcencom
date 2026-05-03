@@ -1146,6 +1146,10 @@ body {
   overflow: hidden;
 }
 
+.export-card-landscape {
+  min-height: 40mm;
+}
+
 .export-card-portrait {
   min-height: 82mm;
 }
@@ -1380,11 +1384,51 @@ body {
 }
 
 .export-card-price-row {
-  margin-top: 0.8rem;
+  margin-top: auto;
+  padding-top: 1.2mm;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.4mm;
+}
+
+.export-credit-page .export-card-landscape {
+  min-height: 38.2mm;
+  padding: 1.45mm 1.5mm 1.35mm;
+}
+
+.export-credit-page .export-card-landscape .export-card-name {
+  margin: 0.4mm 0 0.5mm;
+  font-size: 4mm;
+  line-height: 0.9;
+}
+
+.export-credit-page .export-card-landscape .export-card-specs {
+  gap: 0.26mm;
+}
+
+.export-credit-page .export-card-landscape .export-spec-row {
+  grid-template-columns: minmax(14mm, 18.5mm) 1.4mm 1fr;
+  gap: 0.12mm 0.45mm;
+  font-size: 2.35mm;
+  line-height: 0.96;
+}
+
+.export-credit-page .export-card-landscape .export-spec-key,
+.export-credit-page .export-card-landscape .export-spec-colon,
+.export-credit-page .export-card-landscape .export-spec-value {
+  font-size: 2.6mm;
+  line-height: 1;
+}
+
+.export-credit-page .export-card-landscape .export-card-price {
+  font-size: 5.6mm;
+}
+
+.export-credit-page .export-card-landscape .export-product-type-badge,
+.export-credit-page .export-card-landscape .export-category-badge {
+  padding: 0.45mm 1.2mm;
+  font-size: 2.15mm;
 }
 
 .export-card-badges {
@@ -1649,6 +1693,8 @@ body {
 @media print {
   body {
     background: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .export-toolbar,
@@ -1672,8 +1718,29 @@ body {
     min-height: auto;
     box-shadow: none;
     border-radius: 0;
+    box-sizing: border-box;
     page-break-after: always;
     break-after: page;
+  }
+
+  .export-credit-page .export-sheet {
+    padding-bottom: 8.2mm;
+    border-bottom: 2.2mm solid #ca1111;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .export-credit-page .export-sheet::after {
+    content: "";
+    position: absolute;
+    left: 5mm;
+    right: 5mm;
+    bottom: 3.2mm;
+    height: 2.8mm;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ca1111 0%, #ef4444 100%);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .export-sheet-landscape {
@@ -1695,6 +1762,47 @@ body {
   .export-sheet:last-child {
     page-break-after: auto;
     break-after: auto;
+  }
+
+  .export-credit-page .export-card-landscape {
+    min-height: 36.6mm;
+    padding: 1.2mm 1.25mm 1.1mm;
+  }
+
+  .export-credit-page .export-card-landscape .export-card-name {
+    margin: 0.3mm 0 0.4mm;
+    font-size: 3.7mm;
+  }
+
+  .export-credit-page .export-card-landscape .export-card-specs {
+    gap: 0.18mm;
+  }
+
+  .export-credit-page .export-card-landscape .export-spec-row {
+    grid-template-columns: minmax(13mm, 17.2mm) 1.2mm 1fr;
+    gap: 0.08mm 0.38mm;
+    font-size: 2.15mm;
+    line-height: 0.92;
+  }
+
+  .export-credit-page .export-card-landscape .export-spec-key,
+  .export-credit-page .export-card-landscape .export-spec-colon,
+  .export-credit-page .export-card-landscape .export-spec-value {
+    font-size: 2.35mm;
+  }
+
+  .export-credit-page .export-card-landscape .export-card-price-row {
+    padding-top: 0.7mm;
+  }
+
+  .export-credit-page .export-card-landscape .export-card-price {
+    font-size: 5.1mm;
+  }
+
+  .export-credit-page .export-card-landscape .export-product-type-badge,
+  .export-credit-page .export-card-landscape .export-category-badge {
+    padding: 0.32mm 1mm;
+    font-size: 1.9mm;
   }
 }
 
