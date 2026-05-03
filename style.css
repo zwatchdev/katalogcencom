@@ -924,7 +924,7 @@ body {
   position: absolute;
   left: 5mm;
   right: 5mm;
-  bottom: 4.1mm;
+  bottom: 1.8mm;
   height: 2.8mm;
   border-radius: 999px;
   background: linear-gradient(90deg, #ca1111 0%, #ef4444 100%);
@@ -1724,8 +1724,7 @@ body {
   }
 
   .export-credit-page .export-sheet {
-    padding-bottom: 8.2mm;
-    border-bottom: 2.2mm solid #ca1111;
+    padding-bottom: 10.5mm;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -1735,7 +1734,7 @@ body {
     position: absolute;
     left: 5mm;
     right: 5mm;
-    bottom: 3.2mm;
+    bottom: 1mm;
     height: 2.8mm;
     border-radius: 999px;
     background: linear-gradient(90deg, #ca1111 0%, #ef4444 100%);
@@ -1745,10 +1744,12 @@ body {
 
   .export-sheet-landscape {
     page: export-landscape;
+    min-height: 194mm;
   }
 
   .export-sheet-portrait {
     page: export-portrait;
+    min-height: 285mm;
   }
 
   .export-sheet-header,
@@ -1765,44 +1766,44 @@ body {
   }
 
   .export-credit-page .export-card-landscape {
-    min-height: 36.6mm;
-    padding: 1.2mm 1.25mm 1.1mm;
+    min-height: 37.4mm;
+    padding: 1.28mm 1.3mm 1.16mm;
   }
 
   .export-credit-page .export-card-landscape .export-card-name {
-    margin: 0.3mm 0 0.4mm;
-    font-size: 3.7mm;
+    margin: 0.34mm 0 0.44mm;
+    font-size: 3.9mm;
   }
 
   .export-credit-page .export-card-landscape .export-card-specs {
-    gap: 0.18mm;
+    gap: 0.2mm;
   }
 
   .export-credit-page .export-card-landscape .export-spec-row {
     grid-template-columns: minmax(13mm, 17.2mm) 1.2mm 1fr;
-    gap: 0.08mm 0.38mm;
-    font-size: 2.15mm;
-    line-height: 0.92;
+    gap: 0.08mm 0.4mm;
+    font-size: 2.28mm;
+    line-height: 0.95;
   }
 
   .export-credit-page .export-card-landscape .export-spec-key,
   .export-credit-page .export-card-landscape .export-spec-colon,
   .export-credit-page .export-card-landscape .export-spec-value {
-    font-size: 2.35mm;
+    font-size: 2.48mm;
   }
 
   .export-credit-page .export-card-landscape .export-card-price-row {
-    padding-top: 0.7mm;
+    padding-top: 0.74mm;
   }
 
   .export-credit-page .export-card-landscape .export-card-price {
-    font-size: 5.1mm;
+    font-size: 5.3mm;
   }
 
   .export-credit-page .export-card-landscape .export-product-type-badge,
   .export-credit-page .export-card-landscape .export-category-badge {
-    padding: 0.32mm 1mm;
-    font-size: 1.9mm;
+    padding: 0.34mm 1.04mm;
+    font-size: 2mm;
   }
 }
 
