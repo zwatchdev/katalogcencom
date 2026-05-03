@@ -295,6 +295,7 @@ const remoteLogoutEndpoint = "/api/admin-logout";
 const remoteSessionEndpoint = "/api/admin-session";
 const remoteExportPreferencesEndpoint = "/api/export-preferences";
 const remoteSiteSettingsEndpoint = "/api/site-settings";
+const supabaseClientScriptUrl = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 const catalogBannerSection = document.getElementById("catalogBannerSection");
 const catalogBannerButton = document.getElementById("catalogBannerButton");
 const catalogBannerImage = document.getElementById("catalogBannerImage");
@@ -483,6 +484,9 @@ let siteSettings = loadSiteSettings();
 let dataMode = "local";
 let supabaseClient = null;
 let supabaseProductsChannel = null;
+let supabaseClientLoadPromise = null;
+let remoteSupabaseUrl = "";
+let remoteSupabaseAnonKey = "";
 let remoteAuthenticated = false;
 let activeExportPage = 1;
 let draggedExportProductId = "";
@@ -789,9 +793,43 @@ async function loadProductsFromRemote() {
   syncCatalog();
 }
 
-function subscribeToRemoteProducts() {
+function loadSupabaseClient() {
+  if (window.supabase?.createClient) {
+    return Promise.resolve(true);
+  }
+
+  if (supabaseClientLoadPromise) {
+    return supabaseClientLoadPromise;
+  }
+
+  supabaseClientLoadPromise = new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = supabaseClientScriptUrl;
+    script.async = true;
+    script.onload = () => resolve(Boolean(window.supabase?.createClient));
+    script.onerror = () => resolve(false);
+    document.head.appendChild(script);
+  });
+
+  return supabaseClientLoadPromise;
+}
+
+async function subscribeToRemoteProducts() {
+  if (!remoteSupabaseUrl || !remoteSupabaseAnonKey) {
+    return false;
+  }
+
+  const clientReady = await loadSupabaseClient();
+
+  if (!clientReady || !window.supabase?.createClient) {
+    return false;
+  }
+
   if (!supabaseClient) {
-    return;
+    supabaseClient = window.supabase.createClient(
+      remoteSupabaseUrl,
+      remoteSupabaseAnonKey
+    );
   }
 
   if (supabaseProductsChannel) {
@@ -812,6 +850,8 @@ function subscribeToRemoteProducts() {
       }
     )
     .subscribe();
+
+  return true;
 }
 
 async function initializeRemoteData() {
@@ -820,24 +860,22 @@ async function initializeRemoteData() {
   if (
     !remoteConfig.enabled ||
     !remoteConfig.supabaseUrl ||
-    !remoteConfig.supabaseAnonKey ||
-    !window.supabase?.createClient
+    !remoteConfig.supabaseAnonKey
   ) {
     dataMode = "local";
     return false;
   }
 
-  supabaseClient = window.supabase.createClient(
-    remoteConfig.supabaseUrl,
-    remoteConfig.supabaseAnonKey
-  );
+  remoteSupabaseUrl = remoteConfig.supabaseUrl;
+  remoteSupabaseAnonKey = remoteConfig.supabaseAnonKey;
   dataMode = "remote";
 
-  await Promise.all([loadProductsFromRemote(), refreshRemoteAuthState(), loadRemoteSiteSettings()]);
+  await Promise.all([loadProductsFromRemote(), refreshRemoteAuthState()]);
+  loadRemoteSiteSettings().catch(() => {});
   if (remoteAuthenticated) {
-    await loadRemoteExportPreferences();
+    refreshExportPreferencesInBackground();
   }
-  subscribeToRemoteProducts();
+  subscribeToRemoteProducts().catch(() => {});
   return true;
 }
 
@@ -2394,6 +2432,36 @@ function showDashboardState() {
 
   if (loginForm) {
     loginForm.reset();
+  }
+}
+
+function setLoginPending(isPending) {
+  if (!loginForm) {
+    return;
+  }
+
+  const submitButton = loginForm.querySelector('button[type="submit"]');
+
+  if (!submitButton) {
+    return;
+  }
+
+  if (!submitButton.dataset.defaultText) {
+    submitButton.dataset.defaultText = submitButton.textContent;
+  }
+
+  submitButton.disabled = Boolean(isPending);
+  submitButton.textContent = isPending ? "Masuk..." : submitButton.dataset.defaultText;
+}
+
+async function refreshExportPreferencesInBackground() {
+  try {
+    await loadRemoteExportPreferences();
+    fillExportSettingsForm();
+    renderExportPreview();
+    renderDashboardList();
+  } catch (error) {
+    // Dashboard should stay usable even if export preferences are slow.
   }
 }
 
@@ -4156,22 +4224,18 @@ if (loginForm) {
 
     const username = loginUsernameInput.value.trim();
     const password = loginPasswordInput.value;
+    setLoginPending(true);
 
     if (!isRemoteDataMode()) {
       if (username === offlineAdminUsername && password === offlineAdminPassword) {
         setAuthenticated(true);
         showDashboardState();
         showExportPageState();
-        Swal.fire({
-          title: "Login offline berhasil",
-          text: "Mode sementara aktif karena Supabase belum tersedia.",
-          icon: "success",
-          confirmButtonText: "Lanjut",
-          confirmButtonColor: "#ca1111"
-        });
+        setLoginPending(false);
         return;
       }
 
+      setLoginPending(false);
       Swal.fire({
         title: "Login offline gagal",
         text: "Gunakan username dan password sementara untuk mode offline.",
@@ -4189,15 +4253,9 @@ if (loginForm) {
       });
 
       setAuthenticated(true);
-      await loadRemoteExportPreferences();
       showDashboardState();
       showExportPageState();
-      Swal.fire({
-        title: "Login berhasil",
-        icon: "success",
-        confirmButtonText: "Lanjut",
-        confirmButtonColor: "#ca1111"
-      });
+      refreshExportPreferencesInBackground();
     } catch (error) {
       Swal.fire({
         title: "Login gagal",
@@ -4206,6 +4264,8 @@ if (loginForm) {
         confirmButtonText: "Coba lagi",
         confirmButtonColor: "#ca1111"
       });
+    } finally {
+      setLoginPending(false);
     }
   });
 }
