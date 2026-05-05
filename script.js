@@ -529,7 +529,8 @@ function createPriceFilterState() {
     min: 0,
     max: 0,
     selectedMin: 0,
-    selectedMax: 0
+    selectedMax: 0,
+    sourceKey: ""
   };
 }
 
@@ -560,10 +561,30 @@ function getPriceBounds(items) {
   };
 }
 
-function syncPriceFilterState(state, items) {
+function getPriceFilterSourceKey(items, contextKey = "") {
+  const normalizedPrices = items
+    .map((product) => Number(product?.price) || 0)
+    .filter((price) => Number.isFinite(price))
+    .sort((left, right) => left - right);
+
+  return `${contextKey}::${normalizedPrices.join(",")}`;
+}
+
+function syncPriceFilterState(state, items, options = {}) {
+  const { contextKey = "", resetOnSourceChange = false } = options;
   const bounds = getPriceBounds(items);
+  const sourceKey = getPriceFilterSourceKey(items, contextKey);
+  const sourceChanged = state.sourceKey !== sourceKey;
+
   state.min = bounds.min;
   state.max = bounds.max;
+  state.sourceKey = sourceKey;
+
+  if (resetOnSourceChange && sourceChanged) {
+    state.selectedMin = bounds.min;
+    state.selectedMax = bounds.max;
+    return;
+  }
 
   if (!Number.isFinite(state.selectedMin) || state.selectedMin < bounds.min) {
     state.selectedMin = bounds.min;
@@ -2086,8 +2107,16 @@ function renderDashboardList() {
     return;
   }
 
-  syncPriceFilterState(dashboardCashPriceFilter, products.filter((product) => !isCreditProduct(product)));
-  syncPriceFilterState(dashboardCreditPriceFilter, products.filter((product) => isCreditProduct(product)));
+  syncPriceFilterState(
+    dashboardCashPriceFilter,
+    products.filter((product) => !isCreditProduct(product)),
+    { contextKey: "dashboard-cash", resetOnSourceChange: true }
+  );
+  syncPriceFilterState(
+    dashboardCreditPriceFilter,
+    products.filter((product) => isCreditProduct(product)),
+    { contextKey: "dashboard-credit", resetOnSourceChange: true }
+  );
   renderPriceFilterControls(dashboardCashPriceFilter, {
     minRange: dashboardCashPriceMinRange,
     maxRange: dashboardCashPriceMaxRange,
@@ -2501,7 +2530,10 @@ function syncCatalog() {
       : normalizedProductType === activeCatalogProductType && !isCreditProduct(product);
   });
 
-  syncPriceFilterState(catalogPriceFilter, catalogItems);
+  syncPriceFilterState(catalogPriceFilter, catalogItems, {
+    contextKey: `catalog-${activeCatalogProductType}`,
+    resetOnSourceChange: true
+  });
   renderPriceFilterControls(catalogPriceFilter, {
     minRange: catalogPriceMinRange,
     maxRange: catalogPriceMaxRange,
